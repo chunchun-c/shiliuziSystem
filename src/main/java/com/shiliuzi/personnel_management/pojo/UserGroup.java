@@ -3,13 +3,10 @@ package com.shiliuzi.personnel_management.pojo;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-/**
- * 角色表（管理员，普通用户）
- */
-@TableName("role")
+@TableName("user_group")
 @Data
-public class Role {
+public class UserGroup {
     private Integer id;
-    private String name;
-    private String comment;
+    private Integer userId;
+    private Integer groupId;
 }

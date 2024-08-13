@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 角色表（管理员，普通用户）
+ * 组别表（前端后台）
  */
-@TableName("role")
+@TableName("group")
 @Data
-public class Role {
+public class Group {
     private Integer id;
     private String name;
     private String comment;

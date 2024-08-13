@@ -4,12 +4,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
- * 角色表（管理员，普通用户）
+ * 上下级关系表
+ * 存储上级用户id和下级用户id
  */
-@TableName("role")
+@TableName("levels")
 @Data
-public class Role {
+public class levels {
     private Integer id;
-    private String name;
-    private String comment;
+    private Integer upperId;
+    private Integer lowerId;
 }
