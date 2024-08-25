@@ -19,9 +19,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public Result getRoleIdByUserId(Integer UserId) {
-        List<Integer> RoleIdList = roleMapper.getRoleIdByUserId(UserId);
-        if (!RoleIdList.isEmpty()){
-            return Result.success(RoleIdList);
+        List<Integer> roleIdList = roleMapper.getRoleIdByUserId(UserId);
+        if (!roleIdList.isEmpty()){
+            return Result.success(roleIdList);
         }else {
             return Result.fail(AppExceptionCodeMsg.NO_FIT_DATA);
         }

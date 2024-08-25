@@ -14,6 +14,7 @@ import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.service.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 
@@ -29,15 +30,25 @@ public class JwtUtil{
         staticUserService=userService;
     }
 
+    //获取token
+    public static String getToken(HttpServletRequest request){
+        String token= request.getHeader("token");
+        if (token!=null){
+            return token;
+        }else {
+            throw new AppException(AppExceptionCodeMsg.TOKEN_FIND_ERROR);
+        }
+    }
+
     //生成token
-    public static String getToken(String userId,String sign){
+    public static String makeToken(String userId,String sign){
         return JWT.create().withAudience(userId)//userId为载荷
                 .withExpiresAt(DateUtil.offsetHour(new Date(),2))//2小时后token到期
                 .sign(Algorithm.HMAC256(sign));//password为token密钥
     }
 
     //根据token查询用户
-    private User getUserByToken(String token) {
+    public static User getUserByToken(String token) {
         String userId;
         User loginUser;
         try {
@@ -51,7 +62,7 @@ public class JwtUtil{
     }
 
     //token验证
-    private void testToken(User loginUser,String token){
+    public static void testToken(User loginUser,String token){
         //用户密码加签验证token
         try {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(loginUser.getPassword())).build();
