@@ -2,6 +2,7 @@ package com.shiliuzi.personnel_management.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shiliuzi.personnel_management.pojo.Role;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

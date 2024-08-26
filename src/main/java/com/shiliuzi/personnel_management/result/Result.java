@@ -48,7 +48,14 @@ public class Result {
         return new Result(appExceptionCodeMsg.getCode(), appExceptionCodeMsg.getMsg(), null);
     }
 
+    public boolean isSuccess() {
+        if (code == 200) {
+            return true;
+        }else {
+            return false;
+        }
 
+    }
 
 
     public Integer getCode() {

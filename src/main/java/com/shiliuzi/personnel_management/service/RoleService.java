@@ -7,4 +7,6 @@ import com.shiliuzi.personnel_management.result.Result;
 public interface RoleService extends IService<Role> {
 
     Result getRoleIdByUserId(Integer UserId);
+
+    Result addUserRole(Integer UserId, Integer RoleId);
 }

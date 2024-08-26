@@ -3,7 +3,9 @@ package com.shiliuzi.personnel_management.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.mapper.RoleMapper;
+import com.shiliuzi.personnel_management.mapper.UserRoleMapper;
 import com.shiliuzi.personnel_management.pojo.Role;
+import com.shiliuzi.personnel_management.pojo.UserRole;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Autowired
     RoleMapper roleMapper;
 
+    @Autowired
+    UserRoleMapper userRoleMapper;
+
     @Override
     public Result getRoleIdByUserId(Integer UserId) {
         List<Integer> roleIdList = roleMapper.getRoleIdByUserId(UserId);
@@ -24,6 +29,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             return Result.success(roleIdList);
         }else {
             return Result.fail(AppExceptionCodeMsg.NO_FIT_DATA);
+        }
+    }
+
+    @Override
+    public Result addUserRole(Integer UserId, Integer RoleId) {
+        UserRole userRole = new UserRole();
+        userRole.setUserId(UserId);
+        userRole.setRoleId(RoleId);
+        int insert = userRoleMapper.insert(userRole);
+        if (insert!=1){
+            return Result.fail("数据插入失败");
+        }else {
+            return Result.success();
         }
     }
 }
