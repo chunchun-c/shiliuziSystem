@@ -40,6 +40,11 @@ public class Result {
     public static Result fail(Integer code,String msg) {
         return new Result(code, msg, null);
     }
+
+    //输入一个自定义的异常枚举类，获取其code和msg
+    public static Result fail(AppExceptionCodeMsg e,String msg) {
+        return new Result(e.getCode(), e.getMsg() , msg);
+    }
     public static Result fail(Integer code,String msg, Object data) {
         return new Result(code, msg, data);
     }

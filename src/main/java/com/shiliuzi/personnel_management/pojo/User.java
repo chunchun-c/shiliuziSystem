@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.shiliuzi.personnel_management.validate.group.RegisterModel;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.List;
 public class User {
     @TableId(type = IdType.AUTO)
     private Integer id;
+
+    @NotBlank(message = "注册时姓名不能为空")
     private String name;
     private String studentId;
     private String grade;

@@ -1,5 +1,8 @@
 package com.shiliuzi.personnel_management.exception;
 
+import lombok.Getter;
+
+@Getter
 public class AppException extends RuntimeException{
     private int code;
     private String msg;
@@ -19,11 +22,4 @@ public class AppException extends RuntimeException{
 
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
 }

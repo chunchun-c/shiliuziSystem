@@ -10,7 +10,9 @@ import com.shiliuzi.personnel_management.service.RoleService;
 import com.shiliuzi.personnel_management.service.UserService;
 import com.shiliuzi.personnel_management.utils.JsonUtil;
 import com.shiliuzi.personnel_management.utils.MD5Util;
+import com.shiliuzi.personnel_management.validate.group.RegisterModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +34,7 @@ public class RegisterController {
 
     //注册接口
     @PostMapping("/register")
-    public Result register(@RequestBody User.RegisterUser registerUser) {
+    public Result register(@RequestBody @Validated(RegisterModel.class) User.RegisterUser registerUser) {
         //获取数据
         String name         =registerUser.getName();
         String studentId    =registerUser.getStudentId();
