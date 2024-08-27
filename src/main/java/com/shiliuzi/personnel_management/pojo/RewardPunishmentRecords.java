@@ -1,5 +1,7 @@
 package com.shiliuzi.personnel_management.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -31,6 +33,7 @@ import java.time.LocalDateTime;
 @TableName("reward_punishment_records")
 @Data
 public class RewardPunishmentRecords {
+    @TableId(type = IdType.AUTO)
     private int id;
     private String name;
     private String studentId;

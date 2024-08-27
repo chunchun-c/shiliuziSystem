@@ -9,7 +9,8 @@ import org.springframework.util.DigestUtils;
 
 @Component
 public class MD5Util {
-    public String EncodeByMd5(String salt, String password) {
+    //name为盐值
+    public static String EncodeByMd5(String salt, String password) {
         String saltPassword=salt+"/"+password;
         String md5Password = DigestUtils.md5DigestAsHex(saltPassword.getBytes());
         return md5Password;
