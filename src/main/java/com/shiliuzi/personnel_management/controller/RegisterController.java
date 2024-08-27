@@ -11,9 +11,6 @@ import com.shiliuzi.personnel_management.service.UserService;
 import com.shiliuzi.personnel_management.utils.JsonUtil;
 import com.shiliuzi.personnel_management.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,18 +30,16 @@ public class RegisterController {
     GroupService groupService;
 
 
-
     //注册接口
     @PostMapping("/register")
-    public Result register(@RequestBody String userForm) {
+    public Result register(@RequestBody User.RegisterUser registerUser) {
         //获取数据
-        JsonNode jsonNode = JsonUtil.jsonToJsonNode(userForm);
-        String name=jsonNode.get("name").asText();
-        String studentId=jsonNode.get("studentId").asText();
-        Integer gradeId=jsonNode.get("gradeId").asInt();
-        String password=jsonNode.get("password").asText();
-        Integer groupId=jsonNode.get("groupId").asInt();
-        Integer roleId=jsonNode.get("roleId").asInt();
+        String name         =registerUser.getName();
+        String studentId    =registerUser.getStudentId();
+        Integer gradeId     =registerUser.getGradeId();
+        String password     =registerUser.getPassword();
+        Integer groupId     =registerUser.getGroupId();
+        Integer roleId      =registerUser.getRoleId();
 
         //格式校验
         if (name==null || name.length()<1 || name.length()>10){

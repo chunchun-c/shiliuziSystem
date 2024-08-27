@@ -7,6 +7,7 @@ import com.shiliuzi.personnel_management.pojo.Permission;
 import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.service.UserService;
 import com.shiliuzi.personnel_management.utils.JwtUtil;
+import com.shiliuzi.personnel_management.utils.ThreadLocalUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,41 +43,13 @@ public class Interceptor implements HandlerInterceptor {
         //验证token
         User user=JwtUtil.getUserByToken(token);
         JwtUtil.testToken(user,token);
-        //验证权限
+        //将用户信息和请求url存入上下文
         String URL = String.valueOf(request.getRequestURL());
-        testPermission(URL,loginUser);
+        ThreadLocalUtil.setUrl(URL);
+        ThreadLocalUtil.setUser(loginUser);
         return true;
     }
 
-    //检查权限
-    private void testPermission(String URL,User user){
-        String reqURL = "/" + StrUtil.subAfter(URL, "/", true);
-        //检查是否为公共请求
-        if (isPublicPath(reqURL)) {
-            return;
-        }
-        //检查该用户是否有权限访问
-        boolean flag = false;
-        for (Permission permission : user.getPermissionList()) {
-            if (URL.contains(permission.getPath())) {
-                flag = true;
-                break;
-            }
-        }
-        if (!flag) {
-            throw new AppException(AppExceptionCodeMsg.PERMISSION_ERROR);
-        }
-    }
-
-    //检查是否为公共路径
-    private boolean isPublicPath(String requestUri) {
-        for (PublicPaths path : PublicPaths.values()) {
-            if (path.getPath().equals(requestUri)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     //目标方法执行之后
     @Override
@@ -88,6 +61,7 @@ public class Interceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+        ThreadLocalUtil.clear();
     }
 
 }

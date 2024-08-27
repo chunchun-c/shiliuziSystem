@@ -49,4 +49,15 @@ public class User {
         }
         this.password=password;
     }
+
+    //注册时前端传回的json
+    @Data
+    public static class RegisterUser {
+        private String name;
+        private String studentId;
+        private Integer gradeId;
+        private String password;
+        private Integer groupId;
+        private Integer roleId;
+    }
 }
