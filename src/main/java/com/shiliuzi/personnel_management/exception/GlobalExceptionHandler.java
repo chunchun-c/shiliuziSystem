@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
         //判断是否为自定义异常
         if (e instanceof AppException) {
             AppException appException = (AppException) e;
+            log.error("抛出自定义异常");
             return Result.fail(appException.getCode(), appException.getMsg());
         } else {
             return Result.fail(AppExceptionCodeMsg.SERVICE_ERROR);
@@ -30,6 +31,8 @@ public class GlobalExceptionHandler {
 
     }
 
+
+    //暂时不启用，后续用到@validate时启用
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public Result handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
