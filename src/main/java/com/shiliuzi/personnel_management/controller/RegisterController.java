@@ -3,6 +3,8 @@ package com.shiliuzi.personnel_management.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shiliuzi.personnel_management.exception.AppException;
+import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.GroupService;
@@ -12,6 +14,7 @@ import com.shiliuzi.personnel_management.utils.JsonUtil;
 import com.shiliuzi.personnel_management.utils.MD5Util;
 import com.shiliuzi.personnel_management.validate.group.RegisterModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,16 +48,20 @@ public class RegisterController {
 
         //格式校验
         if (name==null || name.length()<1 || name.length()>10){
-            return Result.fail("姓名格式错误");
+            throw new AppException(AppExceptionCodeMsg.INVALID_NAME_FORMAT);
+            //return Result.fail("姓名格式错误");
         }
         if (!Pattern.matches("^\\d{10}$", studentId)){
-            return Result.fail("学号格式错误");
+            throw new AppException(AppExceptionCodeMsg.INVALID_STUDENT_ID_FORMAT);
+            //return Result.fail("学号格式错误");
         }
         if (gradeId==null || gradeId<1 || gradeId>4){
-            return Result.fail("年级信息错误");
+            throw new AppException(AppExceptionCodeMsg.GRADE_ERROR);
+            //return Result.fail("年级信息错误");
         }
         if (!Pattern.matches("^(?![\\d_]+$)(?![a-z_]+$)(?![A-Z_]+$)[\\w\\d]{6,16}$",password)){
-            return Result.fail("密码格式错误");
+            throw new AppException(AppExceptionCodeMsg.INVALID_PASSWORD_FORMAT);
+            //return Result.fail("密码格式错误");
         }
         //保存用户到数据库
         User user = new User(name,studentId,gradeId, MD5Util.EncodeByMd5(name,password));
