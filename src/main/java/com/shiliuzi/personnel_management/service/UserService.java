@@ -7,4 +7,6 @@ import com.shiliuzi.personnel_management.result.Result;
 public interface UserService extends IService<User> {
 
     Result getPermissionListByUserId(Integer userId);
+
+    Result getAllUserInfo();
 }

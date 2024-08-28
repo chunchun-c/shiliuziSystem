@@ -8,7 +8,7 @@ import lombok.Data;
 /**
  * 组别表（前端后台）
  */
-@TableName("group")
+@TableName("`group`")
 @Data
 public class Group {
     @TableId(type = IdType.AUTO)

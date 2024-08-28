@@ -9,4 +9,6 @@ public interface RoleService extends IService<Role> {
     Result getRoleIdByUserId(Integer UserId);
 
     Result addUserRole(Integer UserId, Integer RoleId);
+
+    Result getRoleByUserId(Integer userId);
 }

@@ -9,4 +9,6 @@ public interface GroupService extends IService<Group> {
     Result getGroupIdByUserId(Integer UserId);
 
     Result addUserGroup(Integer UserId, Integer GroupId);
+
+    Result getGroupByUserId(Integer UserId);
 }

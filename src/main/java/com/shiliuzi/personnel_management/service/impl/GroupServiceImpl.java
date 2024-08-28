@@ -1,5 +1,6 @@
 package com.shiliuzi.personnel_management.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.mapper.GroupMapper;
@@ -42,6 +43,24 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
             return Result.fail("数据插入失败");
         }else {
             return Result.success();
+        }
+    }
+
+    //获取用户组别
+    @Override
+    public Result getGroupByUserId(Integer UserId) {
+        //获取组别ID
+        QueryWrapper<UserGroup> userGroupWrapper = new QueryWrapper<>();
+        userGroupWrapper.select("group_id").eq("user_id", UserId);
+        UserGroup userGroup = userGroupMapper.selectOne(userGroupWrapper);
+        //获取组别信息
+        QueryWrapper<Group> groupWrapper = new QueryWrapper<>();
+        groupWrapper.select("name").eq("id", userGroup.getGroupId());
+        Group group = groupMapper.selectOne(groupWrapper);
+        if (group!=null){
+            return Result.success(group.getName());
+        }else {
+            return Result.fail(AppExceptionCodeMsg.NO_FIT_DATA);
         }
     }
 }

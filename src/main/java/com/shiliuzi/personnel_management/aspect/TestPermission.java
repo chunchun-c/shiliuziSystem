@@ -8,6 +8,7 @@ import com.shiliuzi.personnel_management.pojo.Permission;
 import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.utils.JwtUtil;
 import com.shiliuzi.personnel_management.utils.ThreadLocalUtil;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,9 +23,9 @@ public class TestPermission {
     @Pointcut("@annotation(com.shiliuzi.personnel_management.annotation.TestPermission)")
     public void testPointCut(){}
 
-    @Around("testPointCut()")
-    public void around (ProceedingJoinPoint joinPoint) throws Throwable {
-        //权限检查
+    @Before("testPointCut()")
+    public void before (JoinPoint joinPoint) throws Throwable {
+        //权限检查，从上下文中获取用户信息
         testPermission(ThreadLocalUtil.getUrl(),ThreadLocalUtil.getUser());
     }
 

@@ -1,5 +1,6 @@
 package com.shiliuzi.personnel_management.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.mapper.RoleMapper;
@@ -42,6 +43,24 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             return Result.fail("数据插入失败");
         }else {
             return Result.success();
+        }
+    }
+
+    //获取用户角色
+    @Override
+    public Result getRoleByUserId(Integer userId) {
+        //查询角色id
+        QueryWrapper<UserRole> userRoleWrapper = new QueryWrapper<>();
+        userRoleWrapper.select("role_id").eq("user_id", userId);
+        UserRole userRole = userRoleMapper.selectOne(userRoleWrapper);
+        //查询角色信息
+        QueryWrapper<Role> roleWrapper = new QueryWrapper<>();
+        roleWrapper.select("name").eq("id", userRole.getRoleId());
+        Role role = roleMapper.selectOne(roleWrapper);
+        if (role!=null){
+            return Result.success(role.getName());
+        }else {
+            return Result.fail(AppExceptionCodeMsg.NO_FIT_DATA);
         }
     }
 }
