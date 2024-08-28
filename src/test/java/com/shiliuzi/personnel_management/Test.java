@@ -1,10 +1,13 @@
 package com.shiliuzi.personnel_management;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shiliuzi.personnel_management.mapper.GroupMapper;
 import com.shiliuzi.personnel_management.mapper.UserGroupMapper;
 import com.shiliuzi.personnel_management.pojo.Group;
+import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.pojo.UserGroup;
+import com.shiliuzi.personnel_management.service.RPRecordService;
 import com.shiliuzi.personnel_management.utils.JwtUtil;
 import com.shiliuzi.personnel_management.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +45,17 @@ public class Test {
     @org.junit.jupiter.api.Test
     public void test3(){
         System.out.println(JwtUtil.makeToken("1", "7115beccdfa9d22152c0482501fee578"));
+    }
+
+
+    @Autowired
+    RPRecordService rpRecordService;
+    @org.junit.jupiter.api.Test
+    public void test4(){
+        Page<RPRecords> rpRecordsPage=new Page<>(1,2);
+        Page<RPRecords> page = rpRecordService.page(rpRecordsPage);
+        System.out.println(page.getRecords());
+        System.out.println(page.getTotal());
+
     }
 }

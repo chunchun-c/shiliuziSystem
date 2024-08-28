@@ -30,7 +30,9 @@ public class Interceptor implements HandlerInterceptor {
     //目标方法执行之前
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        //检查是否登录
+
+        //之后写好登录接口要加回来，别删
+        //        //检查是否登录
 //        HttpSession session = request.getSession();
 //        User loginUser = (User) session.getAttribute("loginUser");
 //        if (loginUser==null){
@@ -44,7 +46,7 @@ public class Interceptor implements HandlerInterceptor {
         String token= JwtUtil.getToken(request);
         //验证token
         User user=JwtUtil.getUserByToken(token);
-        //添加权限
+        //添加权限（之后改为在登录的时候做）
         List<Permission> permissionList= (List<Permission>) userService.getPermissionListByUserId(user.getId()).getData();
         user.setPermissionList(permissionList);
         JwtUtil.testToken(user,token);

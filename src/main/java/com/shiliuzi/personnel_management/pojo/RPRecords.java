@@ -1,6 +1,7 @@
 package com.shiliuzi.personnel_management.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -32,12 +33,13 @@ import java.time.LocalDateTime;
  */
 @TableName("reward_punishment_records")
 @Data
-public class RewardPunishmentRecords {
+public class RPRecords {
     @TableId(type = IdType.AUTO)
     private int id;
     private String name;
     private String studentId;
     private String grade;
+    @TableField("`group`")
     private String group;
     private String role;
     private String rpType;
