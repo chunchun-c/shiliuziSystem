@@ -12,6 +12,7 @@ import com.shiliuzi.personnel_management.service.RoleService;
 import com.shiliuzi.personnel_management.service.UserService;
 import com.shiliuzi.personnel_management.utils.JsonUtil;
 import com.shiliuzi.personnel_management.utils.MD5Util;
+import com.shiliuzi.personnel_management.utils.ReflectionUtil;
 import com.shiliuzi.personnel_management.validate.group.RegisterModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @RestController
@@ -39,12 +41,17 @@ public class RegisterController {
     @PostMapping("/register")
     public Result register(@RequestBody @Validated(RegisterModel.class) User.RegisterUser registerUser) {
         //获取数据
-        String name         =registerUser.getName();
-        String studentId    =registerUser.getStudentId();
-        Integer gradeId     =registerUser.getGradeId();
-        String password     =registerUser.getPassword();
-        Integer groupId     =registerUser.getGroupId();
-        Integer roleId      =registerUser.getRoleId();
+
+        // 使用工具类提取字段
+        Map<String, Object> registerMap = ReflectionUtil.toMap(registerUser);
+
+        // 从 Map 中获取字段值
+        String name = (String) registerMap.get("name");
+        String studentId = (String) registerMap.get("studentId");
+        Integer gradeId = (Integer) registerMap.get("gradeId");
+        String password = (String) registerMap.get("password");
+        Integer groupId = (Integer) registerMap.get("groupId");
+        Integer roleId = (Integer) registerMap.get("roleId");
 
         //格式校验
         if (name==null || name.length()<1 || name.length()>10){
@@ -77,5 +84,6 @@ public class RegisterController {
             return Result.fail("注册失败");
         }
     }
+
 
 }

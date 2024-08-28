@@ -2,6 +2,7 @@ package com.shiliuzi.personnel_management.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.mapper.UserMapper;
 import com.shiliuzi.personnel_management.pojo.Permission;
 import com.shiliuzi.personnel_management.pojo.User;
@@ -69,8 +70,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return Result.success(userVoList);
     }
 
+    @Override
+    public Result getUserNameAndPassword(String name,String password,String captcha) {
 
-
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name", name)
+                .eq("password", password);
+        User user = userMapper.selectOne(queryWrapper);
+        if (user != null){
+            return Result.success();
+        }else {
+            return Result.fail(AppExceptionCodeMsg.ACCOUNT_ERROR);
+        }
+    }
 
 
 }

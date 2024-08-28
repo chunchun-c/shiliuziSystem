@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.shiliuzi.personnel_management.validate.group.RegisterModel;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -63,5 +64,14 @@ public class User {
         private String password;
         private Integer groupId;
         private Integer roleId;
+    }
+
+    //登录时前端传回的json
+    @Data
+    public static class LoginUser {
+        private String name;
+        private String password;
+        //验证码
+        private String captcha;
     }
 }

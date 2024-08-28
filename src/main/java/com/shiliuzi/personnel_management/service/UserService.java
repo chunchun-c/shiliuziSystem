@@ -9,4 +9,6 @@ public interface UserService extends IService<User> {
     Result getPermissionListByUserId(Integer userId);
 
     Result getAllUserInfo();
+
+    Result getUserNameAndPassword(String name,String password,String captcha);
 }

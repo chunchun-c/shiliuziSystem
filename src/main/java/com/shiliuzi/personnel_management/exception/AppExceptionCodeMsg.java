@@ -10,8 +10,10 @@ public enum AppExceptionCodeMsg {
     INVALID_STUDENT_ID_FORMAT(400,"学号格式错误"),
     INVALID_PASSWORD_FORMAT(400,"密码格式错误"),
     GRADE_ERROR(400,"年级信息错误"),
+    ACCOUNT_ERROR(400,"账号或密码错误"),
 
     FILE_ERROR(402,"文件错误"),
+
 
     NO_FIT_DATA(404,"未找到符合条件的数据"),
 
