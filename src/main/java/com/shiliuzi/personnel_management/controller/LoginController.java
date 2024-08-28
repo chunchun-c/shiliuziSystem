@@ -38,6 +38,7 @@ public class LoginController {
         Result loginResult = userService.getUserNameAndPassword(name, MD5Util.EncodeByMd5(name, password), captcha);
         if (loginResult.isSuccess()){
 
+            //jwt具体逻辑不清楚
             return Result.success("登录成功",JwtUtil.getToken());
         }else {
             return Result.fail("登录失败");
