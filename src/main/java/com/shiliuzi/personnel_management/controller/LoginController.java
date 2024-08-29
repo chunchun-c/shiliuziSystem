@@ -3,6 +3,7 @@ package com.shiliuzi.personnel_management.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.jwt.JWTUtil;
+import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.UserService;
@@ -39,11 +40,10 @@ public class LoginController {
         if (loginResult.isSuccess()){
 
             //jwt具体逻辑不清楚
-            return Result.success("登录成功",JwtUtil.getToken());
+            return Result.success("登录成功");
         }else {
-            return Result.fail("登录失败");
+            return Result.fail(AppExceptionCodeMsg.USERID_PWD_WRONG);
         }
 
-        return null;
     }
 }

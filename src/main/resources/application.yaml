@@ -13,3 +13,5 @@ spring:
 
   thymeleaf:
     enabled: false
+server:
+  address: 0.0.0.0

@@ -84,5 +84,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    //根据用户名获取用户
+    @Override
+    public Result getUserByName(String username) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name", username);
+        List<User> users = userMapper.selectList(queryWrapper);
+        if (!users.isEmpty()){
+            return Result.success(users);
+        }else {
+            return Result.fail(AppExceptionCodeMsg.NO_FIT_DATA);
+        }
+    }
+
 
 }

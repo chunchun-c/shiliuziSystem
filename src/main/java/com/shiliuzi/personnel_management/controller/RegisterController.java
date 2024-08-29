@@ -1,5 +1,6 @@
 package com.shiliuzi.personnel_management.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -39,36 +41,32 @@ public class RegisterController {
 
     //注册接口
     @PostMapping("/register")
-    public Result register(@RequestBody @Validated(RegisterModel.class) User.RegisterUser registerUser) {
+    public Result register(@RequestBody User.RegisterUser registerUser) {
         //获取数据
-
-        // 使用工具类提取字段
-        Map<String, Object> registerMap = ReflectionUtil.toMap(registerUser);
-
-        // 从 Map 中获取字段值
-        String name = (String) registerMap.get("name");
-        String studentId = (String) registerMap.get("studentId");
-        Integer gradeId = (Integer) registerMap.get("gradeId");
-        String password = (String) registerMap.get("password");
-        Integer groupId = (Integer) registerMap.get("groupId");
-        Integer roleId = (Integer) registerMap.get("roleId");
+        String name = registerUser.getName();
+        String studentId = registerUser.getStudentId();
+        Integer gradeId = registerUser.getGradeId();
+        String password = registerUser.getPassword();
+        Integer groupId = registerUser.getGroupId();
+        Integer roleId = registerUser.getRoleId();
 
         //格式校验
         if (name==null || name.length()<1 || name.length()>10){
-            throw new AppException(AppExceptionCodeMsg.INVALID_NAME_FORMAT);
-            //return Result.fail("姓名格式错误");
+            return Result.fail(AppExceptionCodeMsg.INVALID_NAME_FORMAT);
         }
         if (!Pattern.matches("^\\d{10}$", studentId)){
-            throw new AppException(AppExceptionCodeMsg.INVALID_STUDENT_ID_FORMAT);
-            //return Result.fail("学号格式错误");
+            return Result.fail(AppExceptionCodeMsg.INVALID_STUDENT_ID_FORMAT);
         }
         if (gradeId==null || gradeId<1 || gradeId>4){
-            throw new AppException(AppExceptionCodeMsg.GRADE_ERROR);
-            //return Result.fail("年级信息错误");
+            return Result.fail(AppExceptionCodeMsg.GRADE_ERROR);
         }
         if (!Pattern.matches("^(?![\\d_]+$)(?![a-z_]+$)(?![A-Z_]+$)[\\w\\d]{6,16}$",password)){
-            throw new AppException(AppExceptionCodeMsg.INVALID_PASSWORD_FORMAT);
-            //return Result.fail("密码格式错误");
+            return Result.fail(AppExceptionCodeMsg.INVALID_PASSWORD_FORMAT);
+        }
+        //检查用户名是否有重复
+        Result userByNameRet = userService.getUserByName(name);
+        if (userByNameRet.isSuccess()){
+            return Result.fail("用户名已存在");
         }
         //保存用户到数据库
         User user = new User(name,studentId,gradeId, MD5Util.EncodeByMd5(name,password));

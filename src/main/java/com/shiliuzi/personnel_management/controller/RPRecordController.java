@@ -1,6 +1,7 @@
 package com.shiliuzi.personnel_management.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.shiliuzi.personnel_management.annotation.TestPermission;
 import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPRecordService;
@@ -15,10 +16,14 @@ public class RPRecordController {
     @Autowired
     RPRecordService rpRecordService;
 
+    @TestPermission
     @GetMapping("/getAllRPRecord")
-    public Result getAllRPRecord(@RequestParam(value = "pn",defaultValue = "1")Integer pn, @RequestParam(value = "size",defaultValue = "10")Integer size) {
+    public Result getAllRPRecord(@RequestParam(value = "pn",defaultValue = "1")Integer pn,
+                                 @RequestParam(value = "size",defaultValue = "10")Integer size) {
         Page<RPRecords> rpRecordsPage=new Page<>(pn,size);
         Page<RPRecords> page = rpRecordService.page(rpRecordsPage);
         return Result.success(page);
     }
+
+
 }

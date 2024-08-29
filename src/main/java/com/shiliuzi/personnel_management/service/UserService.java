@@ -11,4 +11,6 @@ public interface UserService extends IService<User> {
     Result getAllUserInfo();
 
     Result getUserNameAndPassword(String name,String password,String captcha);
+
+    Result getUserByName(String username);
 }
