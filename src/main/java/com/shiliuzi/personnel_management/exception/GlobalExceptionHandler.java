@@ -23,7 +23,6 @@ public class GlobalExceptionHandler {
         //判断是否为自定义异常
         if (e instanceof AppException) {
             AppException appException = (AppException) e;
-            log.error("抛出自定义异常");
             return Result.fail(appException.getCode(), appException.getMsg());
         } else {
             return Result.fail(AppExceptionCodeMsg.SERVICE_ERROR);
