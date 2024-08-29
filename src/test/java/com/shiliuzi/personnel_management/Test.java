@@ -12,7 +12,6 @@ import com.shiliuzi.personnel_management.utils.JwtUtil;
 import com.shiliuzi.personnel_management.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
 
 @SpringBootTest
 public class Test {
