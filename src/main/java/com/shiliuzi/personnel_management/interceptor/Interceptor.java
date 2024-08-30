@@ -35,7 +35,7 @@ public class Interceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         User loginUser = (User) session.getAttribute("loginUser");
         if (loginUser==null){
-            request.setAttribute("msg", "请先登录");
+            response.getWriter().print("please login first");
             return false;
         }
 
