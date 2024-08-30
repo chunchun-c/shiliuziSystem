@@ -31,29 +31,23 @@ public class Interceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        //之后写好登录接口要加回来，别删
-        //        //检查是否登录
-//        HttpSession session = request.getSession();
-//        User loginUser = (User) session.getAttribute("loginUser");
-//        if (loginUser==null){
-//            //转发到登录页
-//            request.setAttribute("msg", "请先登录");
-//            request.getRequestDispatcher("/").forward(request, response);
-//            return false;
-//        }
+        //检查是否登录
+        HttpSession session = request.getSession();
+        User loginUser = (User) session.getAttribute("loginUser");
+        if (loginUser==null){
+            request.setAttribute("msg", "请先登录");
+            return false;
+        }
 
         //获取token
         String token= JwtUtil.getToken(request);
         //验证token
         User user=JwtUtil.getUserByToken(token);
-        //添加权限（之后改为在登录的时候做）
-        List<Permission> permissionList= (List<Permission>) userService.getPermissionListByUserId(user.getId()).getData();
-        user.setPermissionList(permissionList);
         JwtUtil.testToken(user,token);
         //将用户信息和请求url存入上下文
         String URL = String.valueOf(request.getRequestURL());
         ThreadLocalUtil.setUrl(URL);
-        ThreadLocalUtil.setUser(user);
+        ThreadLocalUtil.setUser(loginUser);
         return true;
     }
 

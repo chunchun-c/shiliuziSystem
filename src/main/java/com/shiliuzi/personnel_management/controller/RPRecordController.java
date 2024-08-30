@@ -3,8 +3,6 @@ package com.shiliuzi.personnel_management.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shiliuzi.personnel_management.annotation.TestPermission;
-import com.shiliuzi.personnel_management.exception.AppException;
-import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPRecordService;
@@ -15,12 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class RPRecordController {
 
     @Autowired
     RPRecordService rpRecordService;
 
+    //获取奖惩记录
     @TestPermission
     @GetMapping("/getRPRecord")
     public Result getAllRPRecord(@RequestParam(value = "pn",defaultValue = "1")Integer pn,
@@ -32,11 +33,21 @@ public class RPRecordController {
             queryWrapper = (QueryWrapper<RPRecords>) rpRecordService.getSelectWrapper(rpRecordsInfoVo).getData();
         }
 
-
         Page<RPRecords> rpRecordsPage=new Page<>(pn,size);
         Page<RPRecords> page = rpRecordService.page(rpRecordsPage,queryWrapper);
         return Result.success(page);
     }
 
+    //删除奖惩记录
+    @TestPermission
+    @GetMapping("/delRPRecord")
+    public Result delRPRecord(@RequestParam Integer id) {
+        boolean remove = rpRecordService.removeById(id);
+        if (remove){
+            return Result.success("删除成功");
+        }else {
+            return Result.fail("删除失败");
+        }
+    }
 
 }

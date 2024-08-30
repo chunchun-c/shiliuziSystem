@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
 @Data
 public class RPRecords {
     @TableId(type = IdType.AUTO)
-    private int id;
+    private Integer id;
     private String name;
     private String studentId;
     private String grade;

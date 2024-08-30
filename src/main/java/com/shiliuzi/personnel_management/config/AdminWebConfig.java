@@ -20,6 +20,6 @@ public class AdminWebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor).
                 addPathPatterns("/**").
-                excludePathPatterns("/","/login1","/register","/css/**","/fonts/**","/images/**","/js/**","/swagger-ui/index.html","/checkCode");
+                excludePathPatterns("/","/enter","/register","/css/**","/fonts/**","/images/**","/js/**","/checkCode");
     }
 }
