@@ -10,4 +10,5 @@ public class RPRecordsInfoVo {
     private Integer gradeId;
     private Integer groupId;
     private Integer roleId;
+    private Integer rpTypeId;
 }

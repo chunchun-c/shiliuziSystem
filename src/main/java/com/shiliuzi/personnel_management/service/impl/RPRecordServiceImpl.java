@@ -49,6 +49,13 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
             Role role = roleMapper.selectById(rpRecordsInfoVo.getRoleId());
             queryWrapper.eq("role", role.getName());
         }
+        if (rpRecordsInfoVo.getRpTypeId() != null){
+            if (rpRecordsInfoVo.getRpTypeId() == 1){
+                queryWrapper.eq("rp_type", "奖励");
+            }else if (rpRecordsInfoVo.getRpTypeId() == 2){
+                queryWrapper.eq("rp_type","惩罚");
+            }
+        }
         return Result.success(queryWrapper);
     }
 }
