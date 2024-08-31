@@ -7,11 +7,11 @@ import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPRecordService;
 import com.shiliuzi.personnel_management.vo.RPRecordsInfoVo;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,5 +49,14 @@ public class RPRecordController {
             return Result.fail("删除失败");
         }
     }
+
+    //导出奖惩记录
+    @PostMapping(value = "/exportRPRecord",produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result exportRPRecord(HttpServletResponse response) {
+        rpRecordService.exportRPRecord(response);
+        return Result.success("导出成功");
+    }
+
+
 
 }

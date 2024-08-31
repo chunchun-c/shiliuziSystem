@@ -2,6 +2,8 @@ package com.shiliuzi.personnel_management.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shiliuzi.personnel_management.exception.AppException;
+import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.mapper.GroupMapper;
 import com.shiliuzi.personnel_management.mapper.RPRecordMapper;
 import com.shiliuzi.personnel_management.mapper.RoleMapper;
@@ -10,9 +12,15 @@ import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.pojo.Role;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPRecordService;
+import com.shiliuzi.personnel_management.utils.ExcelUtil;
 import com.shiliuzi.personnel_management.vo.RPRecordsInfoVo;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> implements RPRecordService {
@@ -58,4 +66,22 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         }
         return Result.success(queryWrapper);
     }
+
+    @Override
+    public void exportRPRecord(HttpServletResponse response) {
+        List<RPRecords> rpRecords = rpRecordMapper.selectList(null);
+
+        try {
+            Map<String, Object> param = new HashMap<>();
+            param.put("title", "奖惩记录模板");
+            param.put("list", rpRecords);
+            ExcelUtil.downLoadExcel("奖惩记录模板", "奖惩记录.xlsx", param, response);
+
+        } catch (Exception e) {
+            throw new AppException(AppExceptionCodeMsg.EXCEL_EXPORT_ERROR);
+        }
+
+    }
+
+
 }

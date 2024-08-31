@@ -56,4 +56,6 @@ public class RPRecords {
     private Integer operatorId;
     private LocalDateTime recentUpdateDate;
     private String operate;
+
+
 }

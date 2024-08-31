@@ -46,8 +46,9 @@ public class LoginController {
         String name = (String) loginUserMap.get("name");
         String captcha = (String) loginUserMap.get("captcha");
 
+        String checkCode = (String) session.getAttribute("checkCode");
         //先判断验证码
-        if (session.getAttribute("checkCode") == null || !session.getAttribute("checkCode").equals(captcha)) {
+        if (session.getAttribute("checkCode") == null || !checkCode.equalsIgnoreCase(captcha)) {
             return Result.fail("验证码错误");
         }
 

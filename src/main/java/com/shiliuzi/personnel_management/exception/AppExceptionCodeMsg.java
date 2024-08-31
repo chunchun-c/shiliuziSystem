@@ -11,6 +11,9 @@ public enum AppExceptionCodeMsg {
     INVALID_PASSWORD_FORMAT(400,"密码格式错误"),
     GRADE_ERROR(400,"年级信息错误"),
     ACCOUNT_ERROR(400,"账号或密码错误"),
+    EXCEL_DOWNLOAD_ERROR(400,"excel文件写入错误"),
+    EXCEL_EXPORT_ERROR(400,"excel文件导出错误"),
+    EXCEL_ATTRIBUTE_ERROR(400,"excel设置属性错误"),
 
     FILE_ERROR(402,"文件错误"),
 
