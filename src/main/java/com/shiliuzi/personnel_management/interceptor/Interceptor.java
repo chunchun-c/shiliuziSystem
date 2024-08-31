@@ -1,11 +1,7 @@
 package com.shiliuzi.personnel_management.interceptor;
 
-import cn.hutool.core.util.StrUtil;
-import com.shiliuzi.personnel_management.exception.AppException;
-import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
-import com.shiliuzi.personnel_management.pojo.Permission;
+
 import com.shiliuzi.personnel_management.pojo.User;
-import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.UserService;
 import com.shiliuzi.personnel_management.utils.JwtUtil;
 import com.shiliuzi.personnel_management.utils.ThreadLocalUtil;
@@ -13,12 +9,9 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 
 @Component
@@ -34,16 +27,16 @@ public class Interceptor implements HandlerInterceptor {
         //检查是否登录
         HttpSession session = request.getSession();
         User loginUser = (User) session.getAttribute("loginUser");
-        if (loginUser==null){
+        if (loginUser == null) {
             response.getWriter().print("please login first");
             return false;
         }
 
         //获取token
-        String token= JwtUtil.getToken(request);
+        String token = JwtUtil.getToken(request);
         //验证token
-        User user=JwtUtil.getUserByToken(token);
-        JwtUtil.testToken(user,token);
+        User user = JwtUtil.getUserByToken(token);
+        JwtUtil.testToken(user, token);
         //将用户信息和请求url存入上下文
         String URL = String.valueOf(request.getRequestURL());
         ThreadLocalUtil.setUrl(URL);

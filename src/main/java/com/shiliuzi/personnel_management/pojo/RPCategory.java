@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class RPCategory {
     private Integer id;
-    private String type;
+    private Integer typeId;
     private String name;
     private Integer isEnable;
     private String comment;

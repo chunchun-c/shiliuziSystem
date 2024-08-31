@@ -2,7 +2,6 @@ package com.shiliuzi.personnel_management.config;
 
 import com.shiliuzi.personnel_management.interceptor.Interceptor;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
