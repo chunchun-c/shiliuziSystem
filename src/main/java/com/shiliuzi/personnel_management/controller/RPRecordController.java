@@ -11,11 +11,13 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 public class RPRecordController {
 
     @Autowired
@@ -58,5 +60,14 @@ public class RPRecordController {
     }
 
 
+    //管理员撤销奖惩记录
+    @TestPermission
+    @PostMapping ("/revokeRPRecord")
+    public Result revokeRPRecord(@Validated @RequestBody RPRecords.RevokeRecord revokeRecord ) {
+
+        Result revoke = rpRecordService.revoke(revokeRecord);
+
+        return revoke;
+    }
 
 }

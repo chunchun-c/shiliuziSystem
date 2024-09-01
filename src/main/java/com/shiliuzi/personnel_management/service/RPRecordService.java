@@ -13,4 +13,5 @@ public interface RPRecordService extends IService<RPRecords> {
     //导出excel
     void exportRPRecord(HttpServletResponse response);
 
+    Result revoke(RPRecords.RevokeRecord revokeRecord);
 }

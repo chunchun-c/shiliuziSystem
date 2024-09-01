@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,6 +36,7 @@ import java.time.LocalDateTime;
  */
 @TableName("reward_punishment_records")
 @Data
+
 public class RPRecords {
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -58,4 +62,13 @@ public class RPRecords {
     private String operate;
 
 
+    //撤销时前端传回的json
+    @Data
+    public static class RevokeRecord {
+        private Integer id;
+        @NotBlank(message = "撤销原因不能为空")
+        private String revokeReason;
+        @NotBlank(message = "撤销备注不能为空")
+        private String revokeComment;
+    }
 }
