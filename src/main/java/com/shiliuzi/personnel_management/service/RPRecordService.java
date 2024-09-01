@@ -10,6 +10,8 @@ public interface RPRecordService extends IService<RPRecords> {
 
     Result getSelectWrapper(RPRecordsInfoVo rpRecordsInfoVo);
 
+    Result addRPRecord(RPRecords.addRPRecords addRPRecords);
+
     //导出excel
     void exportRPRecord(HttpServletResponse response);
 

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
@@ -36,7 +37,6 @@ import java.time.LocalDateTime;
  */
 @TableName("reward_punishment_records")
 @Data
-
 public class RPRecords {
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -61,7 +61,54 @@ public class RPRecords {
     private LocalDateTime recentUpdateDate;
     private String operate;
 
+    //增加奖惩记录json
+    @Data
+    public static class addRPRecords{
 
+        @NotBlank
+        @Size(min = 1,max = 10)
+        private String name;
+
+        @Pattern(regexp = "^\\d{10}$")
+        private String studentId;
+
+        @Min(1)
+        @Max(4)
+        private Integer gradeId;
+
+        @Min(1)
+        private Integer groupId;
+
+        @Max(2)
+        @Min(1)
+        private Integer roleId;
+
+        @NotNull
+        @Min(1)
+        @Max(2)
+        private Integer rpTypeId;
+
+        @NotNull
+        @Min(1)
+        private Integer rpCategoryId;
+
+        @NotNull
+        @Past
+        private LocalDateTime rpDate;
+
+        @NotBlank
+        @Size(min = 1,max = 50)
+        private String rpContent;
+
+        private BigDecimal rpAmount;
+
+        @NotBlank
+        @Size(min = 1,max = 50)
+        private String rpReason;
+
+        @Size(min = 1,max = 50)
+        private String rpComment;
+    }
     //撤销时前端传回的json
     @Data
     public static class RevokeRecord {

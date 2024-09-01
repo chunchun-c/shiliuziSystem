@@ -1,8 +1,5 @@
 package com.shiliuzi.personnel_management.controller;
 
-
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.jwt.JWTUtil;
 import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.pojo.Permission;
 import com.shiliuzi.personnel_management.pojo.User;

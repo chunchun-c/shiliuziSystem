@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,7 +21,7 @@ public class UserController {
     //获取全部成员信息
     @TestPermission
     @GetMapping("/getAllUserInfo")
-    public Result getAllUserInfo(@RequestParam(value = "pn",defaultValue = "1")Integer pn,@RequestParam(value = "size",defaultValue = "10")Integer size) {
+    public Result getAllUserInfo(@RequestParam(value = "pn", defaultValue = "1") Integer pn, @RequestParam(value = "size", defaultValue = "10") Integer size) {
         Result allUserInfoRet = userService.getAllUserInfo();
         List<UserVo> userVoList = (List<UserVo>) allUserInfoRet.getData();
         //分页展示

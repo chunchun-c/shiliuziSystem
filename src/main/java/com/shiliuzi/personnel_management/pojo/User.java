@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.shiliuzi.personnel_management.validate.group.RegisterModel;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -58,11 +56,30 @@ public class User {
     //注册时前端传回的json
     @Data
     public static class RegisterUser {
+        @NotBlank
+        @Size(min = 1,max = 10)
         private String name;
+
+        @NotBlank
+        @Pattern(regexp = "^\\d{10}$")
         private String studentId;
+
+        @NotNull
+        @Min(1)
+        @Max(4)
         private Integer gradeId;
+
+        @NotBlank
+        @Pattern(regexp = "^(?![\\d_]+$)(?![a-z_]+$)(?![A-Z_]+$)[\\w\\d]{6,16}$")
         private String password;
+
+        @NotNull
+        @Min(1)
         private Integer groupId;
+
+        @NotNull
+        @Max(2)
+        @Min(1)
         private Integer roleId;
     }
 
