@@ -19,26 +19,7 @@ import java.time.LocalDateTime;
 public class RevokeApply {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String name;
-    private String studentId;
-    private String grade;
-    @TableField("`group`")
-    private String group;
-    private String role;
-    private String rpType;
-    private String rpCategory;
-    private LocalDateTime rpDate;
-    private String rpContent;
-    private BigDecimal rpAmount;
-    private String rpReason;
-    private String rpComment;
-    private Integer isRevoke;
-    private LocalDateTime revokeDate;
-    private String revokeReason;
-    private String revokeComment;
-    private Integer operatorId;
-    private LocalDateTime recentUpdateDate;
-    private String operate;
+    private Integer rpId;
     private LocalDateTime applyDate;
     //0未处理，1处理为同意，2处理为忽略
     private Integer state;

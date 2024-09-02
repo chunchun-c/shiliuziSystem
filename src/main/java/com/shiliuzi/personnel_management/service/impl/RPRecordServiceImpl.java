@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg.REVOKE_INFO_NOT_FOUND;
+
 @Service
 public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> implements RPRecordService {
 
@@ -145,16 +147,17 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         QueryWrapper<RPRecords> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("is_revoke").eq("id", id);
 
-        // 执行查询，返回一个 Map 对象
-        Map<String, Object> resultMap = (Map<String, Object>) rpRecordMapper.selectMaps(queryWrapper);
+        // 执行查询
+        List<Map<String, Object>> maps = rpRecordMapper.selectMaps(queryWrapper);
 
         //判断是否存在
-        if (resultMap.isEmpty()) {
-            return Result.fail("记录未找到");
+        if (maps.isEmpty()) {
+            //未找到该记录就抛异常
+            throw new AppException(REVOKE_INFO_NOT_FOUND);
         }
 
         //判断是否已经撤销
-        Integer isRevoke = (Integer) resultMap.get("is_revoke");
+        Integer isRevoke = (Integer) maps.get(0).get("is_revoke");
         if(isRevoke == 1){
             return Result.success("记录已成功撤销");
         }
