@@ -19,10 +19,14 @@ import com.shiliuzi.personnel_management.utils.ThreadLocalUtil;
 import com.shiliuzi.personnel_management.vo.RPRecordsInfoVo;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
-
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +79,14 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         return Result.success(queryWrapper);
     }
 
+    //读取文件保存路径
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @Override
     public Result addRPRecord(RPRecords.addRPRecords addRPRecords) {
+
+        //创建奖惩记录对象
         RPRecords rpRecords = new RPRecords();
         rpRecords.setName(addRPRecords.getName());
         rpRecords.setStudentId(addRPRecords.getStudentId());
@@ -111,13 +121,23 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         //添加更新日期
         rpRecords.setRecentUpdateDate(LocalDateTime.now());
         int insert = rpRecordMapper.insert(rpRecords);
+
         if (insert == 1){
-            return Result.success();
+            return Result.success(rpRecords.getId());
         }else {
             return Result.fail("新增失败");
         }
     }
 
+    private boolean isValidFileType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        return Arrays.asList("xls", "ppt", "docx", "xlsx", "pptx", "pdf").contains(fileExtension);
+    }
+
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return dotIndex > 0 ? fileName.substring(dotIndex + 1).toLowerCase() : "";
+    }
 
 
     @Override
@@ -136,5 +156,25 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
 
     }
 
+    @Override
+    public Result addRPRecordAnnex(MultipartFile file,Integer reRecordsId) {
+        //附件格式校验
+        if (file!=null){
+            String fileName = file.getOriginalFilename();
+            if (fileName == null || !isValidFileType(fileName)) {
+                return Result.fail("附件格式错误,允许格式为xls、ppt、docx、xlsx、pptx、pdf");
+            }
+        }
+        //保存附件
+        String fileName = file.getOriginalFilename();
+        fileName = "奖惩记录"+reRecordsId+"附件"+"."+getFileExtension(fileName);
+        try {
+            File destinationFile = new File(uploadDir,fileName);
+            file.transferTo(destinationFile);
+        } catch (IOException e) {
+            return Result.fail("附件保存失败");
+        }
+        return Result.success();
+    }
 
 }

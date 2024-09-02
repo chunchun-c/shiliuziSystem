@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
@@ -65,7 +66,7 @@ public class RPRecordController {
 
     //新增奖惩记录
     @TestPermission
-    @GetMapping("/addRPRecord")
+    @PostMapping("/addRPRecord")
     public Result addRPRecord(@RequestBody @Validated RPRecords.addRPRecords addRPRecords) {
 
         //判断groupId是否合法
@@ -84,7 +85,16 @@ public class RPRecordController {
 
         //新增数据
         return rpRecordService.addRPRecord(addRPRecords);
+
     }
+
+    //添加奖惩记录附件
+    @TestPermission
+    @PostMapping("/addRPRecordAnnex")
+    public Result addRPRecordAnnex(@RequestParam("file") MultipartFile file,@RequestParam Integer reRecordsId){
+        return rpRecordService.addRPRecordAnnex(file,reRecordsId);
+    }
+
 
     //导出奖惩记录
     @PostMapping(value = "/exportRPRecord", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,6 +102,5 @@ public class RPRecordController {
         rpRecordService.exportRPRecord(response);
         return Result.success("导出成功");
     }
-
 
 }
