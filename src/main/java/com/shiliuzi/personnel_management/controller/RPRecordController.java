@@ -88,6 +88,26 @@ public class RPRecordController {
         return rpRecordService.addRPRecord(addRPRecords);
     }
 
+    //更新奖惩记录
+    @TestPermission
+    @PostMapping("/updRPRecord")
+    public Result updRPRecord(@RequestBody @Validated RPRecords.updRPRecords updRPRecords){
+        if (updRPRecords.getGradeId() !=null && updRPRecords.getGroupId() > groupService.list().size()) {
+            return Result.fail("组别id错误");
+        }
+        if (updRPRecords.getRpCategoryId()!=null){
+            RPCategory rpCategory = rpCategoryService.getById(updRPRecords.getRpCategoryId());
+            if (rpCategory == null || rpCategory.getIsEnable() != 1) {
+                return Result.fail("奖惩类别错误");
+            }
+            if (updRPRecords.getRpTypeId()!=null && !Objects.equals(rpCategory.getTypeId(), updRPRecords.getRpTypeId())) {
+                return Result.fail("奖惩类型与类别不匹配");
+            }
+        }
+
+        return rpRecordService.updRPRecord(updRPRecords);
+    }
+
     //添加奖惩记录附件
     @TestPermission
     @PostMapping("/addRPRecordAnnex")

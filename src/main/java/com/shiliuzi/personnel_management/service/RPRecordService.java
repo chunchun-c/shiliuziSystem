@@ -9,9 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface RPRecordService extends IService<RPRecords> {
 
+    //构建模糊查询wrapper
     Result getSelectWrapper(RPRecordsInfoVo rpRecordsInfoVo);
 
+    //新增奖惩记录
     Result addRPRecord(RPRecords.addRPRecords addRPRecords);
+
+    //修改奖惩记录
+    Result updRPRecord(RPRecords.updRPRecords updRPRecords);
 
     //导出excel
     void exportRPRecord(HttpServletResponse response);

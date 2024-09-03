@@ -1,6 +1,5 @@
 package com.shiliuzi.personnel_management.service.impl;
 
-import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiliuzi.personnel_management.exception.AppException;
@@ -27,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +48,9 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
     @Autowired
     RoleMapper roleMapper;
 
+    //读取文件保存路径
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     @Override
     public Result getSelectWrapper(RPRecordsInfoVo rpRecordsInfoVo) {
@@ -83,47 +84,10 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         return Result.success(queryWrapper);
     }
 
-    //读取文件保存路径
-    @Value("${file.upload-dir}")
-    private String uploadDir;
-
+    //新增奖惩记录
     @Override
     public Result addRPRecord(RPRecords.addRPRecords addRPRecords) {
-
-        //创建奖惩记录对象
-        RPRecords rpRecords = new RPRecords();
-        rpRecords.setName(addRPRecords.getName());
-        rpRecords.setStudentId(addRPRecords.getStudentId());
-
-        if (addRPRecords.getGradeId()!=null){
-            String[] grades = {"大一", "大二", "大三", "大四"};
-            rpRecords.setGrade(grades[addRPRecords.getGradeId()-1]);
-        }
-        if (addRPRecords.getGroupId()!=null){
-            Group group = groupMapper.selectById(addRPRecords.getGroupId());
-            rpRecords.setGroup(group.getName());
-        }
-        if (addRPRecords.getRoleId()!=null){
-            Role role = roleMapper.selectById(addRPRecords.getRoleId());
-            rpRecords.setRole(role.getName());
-        }
-
-        String[] rpType = {"奖励", "惩罚"};
-        rpRecords.setRpType(rpType[addRPRecords.getRpTypeId()-1]);
-
-        RPCategory rpCategory = rpCategoryMapper.selectById(addRPRecords.getRpCategoryId());
-        rpRecords.setRpCategory(rpCategory.getName());
-
-        rpRecords.setRpDate(addRPRecords.getRpDate());
-        rpRecords.setRpContent(addRPRecords.getRpContent());
-        rpRecords.setRpAmount(addRPRecords.getRpAmount());
-        rpRecords.setRpReason(addRPRecords.getRpReason());
-        rpRecords.setRpComment(addRPRecords.getRpComment());
-
-        //添加操作人
-        rpRecords.setOperatorId(ThreadLocalUtil.getUser().getId());
-        //添加更新日期
-        rpRecords.setRecentUpdateDate(LocalDateTime.now());
+        RPRecords rpRecords= toRPRecords(addRPRecords);
         int insert = rpRecordMapper.insert(rpRecords);
 
         if (insert == 1){
@@ -133,16 +97,20 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         }
     }
 
-    private boolean isValidFileType(String fileName) {
-        String fileExtension = getFileExtension(fileName);
-        return Arrays.asList("xls", "ppt", "docx", "xlsx", "pptx", "pdf").contains(fileExtension);
-    }
+    //修改奖惩记录
+    @Override
+    public Result updRPRecord(RPRecords.updRPRecords updRPRecords) {
+        RPRecords rpRecords= toRPRecords(updRPRecords);
+        rpRecords.setId(updRPRecords.getId());
+        rpRecords.setOperate("修改");
 
-    private String getFileExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        return dotIndex > 0 ? fileName.substring(dotIndex + 1).toLowerCase() : "";
+        int update = rpRecordMapper.updateById(rpRecords);
+        if (update > 0){
+            return Result.success();
+        }else {
+            return Result.fail("修改失败");
+        }
     }
-
 
     @Override
     public void exportRPRecord(HttpServletResponse response) {
@@ -211,7 +179,7 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         }
         //保存附件
         String fileName = file.getOriginalFilename();
-        fileName = "奖惩记录"+reRecordsId+"附件"+"."+getFileExtension(fileName);
+        fileName = "奖惩记录"+reRecordsId+"附件:"+fileName+"."+getFileExtension(fileName);
         try {
             File destinationFile = new File(uploadDir,fileName);
             file.transferTo(destinationFile);
@@ -219,6 +187,58 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
             return Result.fail("附件保存失败");
         }
         return Result.success();
+    }
+
+    //判断文件格式
+    private boolean isValidFileType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        return Arrays.asList("xls", "ppt", "docx", "xlsx", "pptx", "pdf").contains(fileExtension);
+    }
+
+    //获取文件拓展名
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return dotIndex > 0 ? fileName.substring(dotIndex + 1).toLowerCase() : "";
+    }
+
+    //格式转换
+    private RPRecords toRPRecords(RPRecords.AURPRecords aurpRecords) {
+        //创建奖惩记录对象
+        RPRecords rpRecords = new RPRecords();
+        rpRecords.setName(aurpRecords.getName());
+        rpRecords.setStudentId(aurpRecords.getStudentId());
+
+        if (aurpRecords.getGradeId()!=null){
+            String[] grades = {"大一", "大二", "大三", "大四"};
+            rpRecords.setGrade(grades[aurpRecords.getGradeId()-1]);
+        }
+        if (aurpRecords.getGroupId()!=null){
+            Group group = groupMapper.selectById(aurpRecords.getGroupId());
+            rpRecords.setGroup(group.getName());
+        }
+        if (aurpRecords.getRoleId()!=null){
+            Role role = roleMapper.selectById(aurpRecords.getRoleId());
+            rpRecords.setRole(role.getName());
+        }
+
+        String[] rpType = {"奖励", "惩罚"};
+        rpRecords.setRpType(rpType[aurpRecords.getRpTypeId()-1]);
+
+        RPCategory rpCategory = rpCategoryMapper.selectById(aurpRecords.getRpCategoryId());
+        rpRecords.setRpCategory(rpCategory.getName());
+
+        rpRecords.setRpDate(aurpRecords.getRpDate());
+        rpRecords.setRpContent(aurpRecords.getRpContent());
+        rpRecords.setRpAmount(aurpRecords.getRpAmount());
+        rpRecords.setRpReason(aurpRecords.getRpReason());
+        rpRecords.setRpComment(aurpRecords.getRpComment());
+
+        //添加操作人
+        rpRecords.setOperatorId(ThreadLocalUtil.getUser().getId());
+        //添加更新日期
+        rpRecords.setRecentUpdateDate(LocalDateTime.now());
+
+        return rpRecords;
     }
 
 }

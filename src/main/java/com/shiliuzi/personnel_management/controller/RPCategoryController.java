@@ -24,10 +24,10 @@ public class RPCategoryController {
     @GetMapping("/getRPCategory")
     public Result getAllRPCategory(@RequestParam(value = "pn",defaultValue = "1")Integer pn,
                                    @RequestParam(value = "size",defaultValue = "10")Integer size,
-                                   @RequestParam Integer type) {
+                                   @RequestParam Integer typeId) {
         QueryWrapper<RPCategory> queryWrapper = new QueryWrapper<>();
-        if (type!=null && type>=1 && type<=2){
-            queryWrapper.eq("type",type);
+        if (typeId!=null && typeId>=1 && typeId<=2){
+            queryWrapper.eq("type_id",typeId);
         }
         Page<RPCategory> rpCategoryPage=new Page<>(pn,size);
         Page<RPCategory> page = rpCategoryService.page(rpCategoryPage,queryWrapper);

@@ -4,11 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -61,9 +58,29 @@ public class RPRecords {
     private LocalDateTime recentUpdateDate;
     private String operate;
 
+    //增加或修改
+    @Data
+    public static class AURPRecords {
+        private Integer id;
+        private String name;
+        private String studentId;
+        private Integer gradeId;
+        private Integer groupId;
+        private Integer roleId;
+        private Integer rpTypeId;
+        private Integer rpCategoryId;
+        private LocalDateTime rpDate;
+        private String rpContent;
+        private BigDecimal rpAmount;
+        private String rpReason;
+        private String rpComment;
+    }
+
     //增加奖惩记录json
     @Data
-    public static class addRPRecords{
+    public static class addRPRecords extends AURPRecords {
+        @Null
+        private Integer id;
 
         @NotBlank
         @Size(min = 1,max = 10)
@@ -109,6 +126,54 @@ public class RPRecords {
         @Size(min = 1,max = 50)
         private String rpComment;
     }
+
+    //修改奖惩记录json
+    @Data
+    public static class updRPRecords extends AURPRecords {
+
+        @NotNull
+        private Integer id;
+
+        @Size(min = 0,max = 10)
+        private String name;
+
+        @Pattern(regexp = "^\\d{10}$")
+        private String studentId;
+
+        @Min(1)
+        @Max(4)
+        private Integer gradeId;
+
+        @Min(1)
+        private Integer groupId;
+
+        @Max(2)
+        @Min(1)
+        private Integer roleId;
+
+        @Min(1)
+        @Max(2)
+        private Integer rpTypeId;
+
+        @Min(1)
+        private Integer rpCategoryId;
+
+        @Past
+        private LocalDateTime rpDate;
+
+        @Size(min = 0,max = 50)
+        private String rpContent;
+
+        private BigDecimal rpAmount;
+
+        @Size(min = 0,max = 50)
+        private String rpReason;
+
+        @Size(min = 0,max = 50)
+        private String rpComment;
+    }
+
+
     //撤销时前端传回的json
     @Data
     public static class RevokeRecord {

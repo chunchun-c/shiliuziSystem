@@ -16,6 +16,7 @@ public class RPCategory {
     private Integer isEnable;
     private String comment;
 
+    //修改奖惩类别
     @Data
     public static class updRPCategory extends RPCategory {
         @NotNull
@@ -36,8 +37,10 @@ public class RPCategory {
         private String comment;
     }
 
+    //新增奖惩类别
     @Data
     public static class addRPCategory extends RPCategory {
+        @Null
         private Integer id;
 
         @Min(1)

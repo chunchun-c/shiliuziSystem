@@ -4,6 +4,7 @@ import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.pojo.Permission;
 import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.result.Result;
+import com.shiliuzi.personnel_management.service.RoleService;
 import com.shiliuzi.personnel_management.service.UserService;
 import com.shiliuzi.personnel_management.utils.CheckCodeUtil;
 import com.shiliuzi.personnel_management.utils.JwtUtil;
@@ -31,6 +32,9 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RoleService roleService;
+
     @PostMapping("/enter")
     public Result login(HttpSession session, @RequestBody User.LoginUser loginUser){
 
@@ -56,7 +60,6 @@ public class LoginController {
         if (loginResult.isSuccess()){
             User user = (User)loginResult.getData();
 
-
             //将id和password返回生成token
             String jwt = JwtUtil.makeToken(user.getId().toString(), user.getPassword());
             //设置用户权限
@@ -66,7 +69,10 @@ public class LoginController {
             //将该用户保存到session中
             session.setAttribute("loginUser",user);
 
-            return Result.success("登录成功",jwt);
+            //获取用户的角色id
+            String roleName = (String) roleService.getRoleByUserId(user.getId()).getData();
+            String[] resultArray = { jwt, roleName};
+            return Result.success("登录成功",resultArray);
         }else {
             return Result.fail(AppExceptionCodeMsg.USERID_PWD_WRONG);
         }
