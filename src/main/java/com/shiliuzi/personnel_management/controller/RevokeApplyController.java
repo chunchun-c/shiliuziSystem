@@ -23,6 +23,39 @@ public class RevokeApplyController {
     @GetMapping("/getApplyRevoke")
     public Result getApplyRevoke(@RequestParam(value = "pn", defaultValue = "1") Integer pn,
                                  @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return revokeApplyService.getAllRevokeApply(pn,size);
+        return revokeApplyService.getAllRevokeApply(pn, size);
+    }
+
+
+    //删除撤销申请消息表
+    @TestPermission
+    @GetMapping("/deleteApplyRevoke")
+    public Result deleteApplyRevoke(@RequestParam Integer id
+    ) {
+
+        boolean remove = revokeApplyService.removeById(id);
+        if(remove){
+            return Result.success("删除成功");
+        }else{
+            return Result.fail("删除失败");
+        }
+    }
+
+    //同意撤销申请消息
+    @TestPermission
+    @GetMapping("/allowApplyRevoke")
+    public Result allowApplyRevoke(@RequestParam Integer id
+    ) {
+        return revokeApplyService.allow(id);
+
+    }
+
+    //忽略撤销申请消息
+    @TestPermission
+    @GetMapping("/ignoreApplyRevoke")
+    public Result ignoreApplyRevoke(@RequestParam Integer id
+    ) {
+        return revokeApplyService.ignore(id);
+
     }
 }

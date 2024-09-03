@@ -7,4 +7,8 @@ import com.shiliuzi.personnel_management.result.Result;
 public interface RevokeApplyService extends IService<RevokeApply> {
 
     Result getAllRevokeApply(Integer pn, Integer size);
+
+    Result allow(Integer id);
+
+    Result ignore(Integer id);
 }
