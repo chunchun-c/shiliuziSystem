@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
                     .collect(Collectors.joining(", "));
             return Result.fail(AppExceptionCodeMsg.PARAM_INVALID, message);
         } else {
+            e.printStackTrace();
             return Result.fail(AppExceptionCodeMsg.SERVICE_ERROR);
         }
 

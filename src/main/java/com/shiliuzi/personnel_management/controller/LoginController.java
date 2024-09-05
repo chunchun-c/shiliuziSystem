@@ -11,7 +11,6 @@ import com.shiliuzi.personnel_management.utils.JwtUtil;
 import com.shiliuzi.personnel_management.utils.MD5Util;
 import com.shiliuzi.personnel_management.utils.ReflectionUtil;
 import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -81,14 +80,13 @@ public class LoginController {
 
     //生成验证码
     @GetMapping("/checkCode")
-    public Result checkCode(HttpServletRequest request, HttpServletResponse response) {
+    public Result checkCode(HttpSession session, HttpServletResponse response) {
         try {
             ServletOutputStream outputStream = response.getOutputStream();
 
             String captcha = CheckCodeUtil.outputVerifyImage(100, 50, outputStream, 4);
 
             //放入session中，与后端生成的验证码进行对比
-            HttpSession session = request.getSession();
             session.setAttribute("checkCode",captcha);
 
             return Result.success("传输验证码成功");
