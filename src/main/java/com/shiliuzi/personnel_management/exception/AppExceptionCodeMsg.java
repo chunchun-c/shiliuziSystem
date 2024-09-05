@@ -13,9 +13,10 @@ public enum AppExceptionCodeMsg {
     ACCOUNT_ERROR(400, "账号或密码错误"),
     EXCEL_DOWNLOAD_ERROR(400, "excel文件写入错误"),
     EXCEL_EXPORT_ERROR(400, "excel文件导出错误"),
-    EXCEL_ATTRIBUTE_ERROR(400, "excel设置属性错误"),
+    EXCEL_IMPORT_FORMAT_ERROR(400, "excel导入格式错误"),
     REVOKE_INFO_NOT_FOUND(400, "撤销奖惩记录时未找到该记录"),
     APPLY_REVOKE_ERROR(400, "同意申请撤销失败"),
+
 
     FILE_ERROR(402, "文件错误"),
 

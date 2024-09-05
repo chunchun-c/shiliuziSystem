@@ -117,10 +117,16 @@ public class RPRecordController {
 
 
     //导出奖惩记录
-    @PostMapping(value = "/exportRPRecord", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Result exportRPRecord(HttpServletResponse response) {
-        rpRecordService.exportRPRecord(response);
-        return Result.success("导出成功");
+    @GetMapping("/exportRPRecord")
+    public void exportRPRecord(HttpServletResponse response,@RequestParam String studentId) {
+        rpRecordService.exportRPRecord(response,studentId);
+    }
+
+
+    //导入奖惩记录
+    @PostMapping("/importRPRecord")
+    public void importRPRecord(@RequestBody MultipartFile file){
+        rpRecordService.importRPRecord(file);
     }
 
 

@@ -1,5 +1,8 @@
 package com.shiliuzi.personnel_management.service.impl;
 
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiliuzi.personnel_management.exception.AppException;
@@ -14,9 +17,9 @@ import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.pojo.Role;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPRecordService;
-import com.shiliuzi.personnel_management.utils.ExcelUtil;
 import com.shiliuzi.personnel_management.utils.ThreadLocalUtil;
 import com.shiliuzi.personnel_management.vo.RPRecordsInfoVo;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,8 +118,42 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
     }
 
     @Override
-    public void exportRPRecord(HttpServletResponse response) {
-        List<RPRecords> rpRecords = rpRecordMapper.selectList(null);
+    public void exportRPRecord(HttpServletResponse response, String studentId) {
+        try {
+            //1.从数据库中查询所有该user奖惩记录
+            QueryWrapper<RPRecords> rpRecordsQueryWrapper = new QueryWrapper<>();
+            rpRecordsQueryWrapper.eq("student_id",studentId);
+            List<RPRecords> rpRecords = rpRecordMapper.selectList(rpRecordsQueryWrapper);
+
+            //2.通过工具类将文件写出到浏览器
+            ExcelWriter writer = ExcelUtil.getWriter(true);
+
+            //自定一个标题别名
+            //writer.addHeaderAlias("username","用户名")
+
+            //一次写出到excel，使用默认方式输出标题
+            writer.write(rpRecords,true);
+
+            //设置浏览器响应格式
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+
+            String fileName = URLEncoder.encode("奖惩记录","UTF-8");
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+            //将writer中的数据刷新到流中
+            ServletOutputStream outputStream =response.getOutputStream();
+            writer.flush(outputStream,true);
+
+            //关闭流,write
+            outputStream.close();
+            writer.close();
+        } catch (IOException e) {
+            throw new AppException(AppExceptionCodeMsg.EXCEL_EXPORT_ERROR);
+        }
+
+
+
+
+        /*List<RPRecords> rpRecords = rpRecordMapper.selectList(null);
 
         try {
             Map<String, Object> param = new HashMap<>();
@@ -124,8 +163,7 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
 
         } catch (Exception e) {
             throw new AppException(AppExceptionCodeMsg.EXCEL_EXPORT_ERROR);
-        }
-
+        }*/
     }
 
     @Override
@@ -165,6 +203,30 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
             return Result.success("记录已成功撤销");
         } else {
             return Result.fail("记录更新失败");
+        }
+    }
+
+    @Override
+    public void importRPRecord(MultipartFile file) {
+        ExcelReader reader = null;
+        try {
+            //1.使用inputStream流读取文件
+            InputStream inputStream = file.getInputStream();
+
+            //2.读取流中的数据(通过hutool工具)
+            reader = ExcelUtil.getReader(inputStream);
+        } catch (IOException e) {
+            throw new AppException(AppExceptionCodeMsg.EXCEL_DOWNLOAD_ERROR);
+        }
+
+        try {
+            //3.将读取的数据填充为List
+            List<RPRecords> rpRecords = reader.readAll(RPRecords.class);
+
+            //4.将List导入数据库
+            rpRecordMapper.batchInsert(rpRecords);
+        } catch (Exception e) {
+            throw new AppException(AppExceptionCodeMsg.EXCEL_IMPORT_FORMAT_ERROR);
         }
     }
 

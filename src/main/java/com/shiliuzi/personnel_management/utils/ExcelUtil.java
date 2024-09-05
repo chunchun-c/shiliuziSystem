@@ -60,7 +60,7 @@ public class ExcelUtil {
             response.addHeader("Cache-Control", "max-age=0");
             return response.getOutputStream();
         } catch (IOException e) {
-            throw new AppException(AppExceptionCodeMsg.EXCEL_ATTRIBUTE_ERROR);
+            throw new AppException(AppExceptionCodeMsg.EXCEL_IMPORT_FORMAT_ERROR);
         }
     }
 

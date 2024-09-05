@@ -19,8 +19,10 @@ public interface RPRecordService extends IService<RPRecords> {
     Result updRPRecord(RPRecords.updRPRecords updRPRecords);
 
     //导出excel
-    void exportRPRecord(HttpServletResponse response);
+    void exportRPRecord(HttpServletResponse response, String studentId);
 
     Result addRPRecordAnnex(MultipartFile file,Integer reRecordsId);
     Result revoke(RPRecords.RevokeRecord revokeRecord);
+
+    void importRPRecord(MultipartFile file);
 }
