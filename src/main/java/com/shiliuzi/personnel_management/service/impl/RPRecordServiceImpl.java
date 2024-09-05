@@ -3,6 +3,8 @@ package com.shiliuzi.personnel_management.service.impl;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiliuzi.personnel_management.exception.AppException;
@@ -17,6 +19,8 @@ import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.pojo.Role;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPRecordService;
+import com.shiliuzi.personnel_management.service.RoleService;
+import com.shiliuzi.personnel_management.utils.ExcelUtil;
 import com.shiliuzi.personnel_management.utils.ThreadLocalUtil;
 import com.shiliuzi.personnel_management.vo.RPRecordsInfoVo;
 import jakarta.servlet.ServletOutputStream;
@@ -28,6 +32,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
@@ -52,6 +59,9 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
 
     @Autowired
     RoleMapper roleMapper;
+
+    @Autowired
+    RoleService roleService;
 
     //读取文件保存路径
     @Value("${file.upload-dir}")
@@ -85,6 +95,11 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
             }else if (rpRecordsInfoVo.getRpTypeId() == 2){
                 queryWrapper.eq("rp_type","惩罚");
             }
+        }
+        //判断是否为普通用户，只能查看自己
+        Role role = (Role) roleService.getRoleByUserId(ThreadLocalUtil.getUser().getId()).getData();
+        if (role.getId()==1){
+            queryWrapper.eq("name", ThreadLocalUtil.getUser().getName());
         }
         return Result.success(queryWrapper);
     }
@@ -241,14 +256,63 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         }
         //保存附件
         String fileName = file.getOriginalFilename();
-        fileName = "奖惩记录"+reRecordsId+"附件:"+fileName+"."+getFileExtension(fileName);
+        fileName = "奖惩记录"+rpRecordsId+"附件,"+fileName;
         try {
-            File destinationFile = new File(uploadDir,fileName);
+            File destinationFile = new File(uploadDir+"\\"+fileName);
             file.transferTo(destinationFile);
         } catch (IOException e) {
             return Result.fail("附件保存失败");
         }
         return Result.success();
+    }
+
+    @Override
+    public Result downloadAnnex(Integer rpRecordsId, HttpServletResponse response) {
+            String filePath=findFileWithPrefix(uploadDir,"奖惩记录"+rpRecordsId+"附件,");
+
+            File file = new File(filePath);
+            if (!file.exists() || !file.isFile()) {
+                return Result.fail("该记录无附件");
+            }
+
+            String fileName=file.getName();
+            // 设置响应头部
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+            try {
+            response.setHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode(fileName,"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+            }
+
+        try (InputStream in = FileUtil.getInputStream(file);
+                 ServletOutputStream out = response.getOutputStream()) {
+                IoUtil.copy(in, out);
+                out.flush();
+            } catch (IOException e) {
+                throw new AppException(AppExceptionCodeMsg.FILE_ERROR);
+            }
+            return Result.success();
+    }
+
+    //查找指定记录附件
+    public String findFileWithPrefix(String directoryPath, String prefix) {
+        File directory = new File(directoryPath);
+        if (!directory.isDirectory()) {
+            return null; // 目录不存在或不是目录
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return null; // 读取目录内容失败
+        }
+
+        for (File file : files) {
+            if (file.isFile() && file.getName().startsWith(prefix)) {
+                return file.getAbsolutePath(); // 返回匹配的文件绝对路径
+            }
+        }
+
+        return null; // 没有找到匹配的文件
     }
 
     //判断文件格式

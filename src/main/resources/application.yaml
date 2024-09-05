@@ -16,7 +16,7 @@ spring:
 
   thymeleaf:
     enabled: false
-    check-template: false
+    check-template-location: false
 server:
   address: 0.0.0.0
 

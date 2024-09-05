@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.mapper.UserMapper;
 import com.shiliuzi.personnel_management.pojo.Permission;
+import com.shiliuzi.personnel_management.pojo.Role;
 import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.GroupService;
@@ -56,7 +57,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             UserVo userVo = new UserVo();
             Result roleRet = roleService.getRoleByUserId(user.getId());
             if (roleRet.isSuccess()) {
-                userVo.setRole((String) roleRet.getData());
+                Role role = (Role) roleRet.getData();
+                userVo.setRole(role.getName());
             }
             Result groupRet = groupService.getGroupByUserId(user.getId());
             if (groupRet.isSuccess()) {

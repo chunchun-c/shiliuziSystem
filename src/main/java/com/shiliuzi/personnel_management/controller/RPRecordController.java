@@ -115,6 +115,13 @@ public class RPRecordController {
         return rpRecordService.addRPRecordAnnex(file,reRecordsId);
     }
 
+    //下载奖惩记录附件
+    @GetMapping("/downloadAnnex")
+    public Result downloadAnnex(@RequestParam("RPRecordId") Integer RPRecordId,HttpServletResponse response) {
+        return rpRecordService.downloadAnnex(RPRecordId,response);
+    }
+
+
 
     //导出奖惩记录
     @GetMapping("/exportRPRecord")
@@ -131,6 +138,7 @@ public class RPRecordController {
 
 
     //管理员撤销奖惩记录
+    @TestPermission
     @PostMapping ("/revokeRPRecord")
     public Result revokeRPRecord(@Validated @RequestBody RPRecords.RevokeRecord revokeRecord ) {
 

@@ -6,11 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shiliuzi.personnel_management.annotation.TestPermission;
 import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.pojo.RPCategory;
+import com.shiliuzi.personnel_management.pojo.RPRecords;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPCategoryService;
+import com.shiliuzi.personnel_management.service.RPRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 
 @RestController
@@ -18,6 +22,9 @@ public class RPCategoryController {
 
     @Autowired
     RPCategoryService rpCategoryService;
+
+    @Autowired
+    RPRecordService rpRecordService;
 
     //获取奖惩类别信息
     @TestPermission
@@ -79,5 +86,25 @@ public class RPCategoryController {
             return Result.fail("更新失败");
         }
 
+    }
+
+    //删除并替换奖惩类别
+    @TestPermission
+    @GetMapping("/delRPCategory")
+    public Result delRPCategory(@RequestParam Integer delId,@RequestParam Integer updId) {
+        if (Objects.equals(delId, updId) || rpCategoryService.getById(delId)==null || rpCategoryService.getById(updId)==null) {
+            return Result.fail(AppExceptionCodeMsg.NO_FIT_DATA);
+        }
+        String delName = rpCategoryService.getById(delId).getName();
+        String updName = rpCategoryService.getById(updId).getName();
+
+        boolean del = rpCategoryService.removeById(delId);
+        if (!del){
+            return Result.fail("删除失败");
+        }
+        UpdateWrapper<RPRecords> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("rp_category",delName).set("rp_category",updName);
+        rpRecordService.update(updateWrapper);
+        return Result.success();
     }
 }

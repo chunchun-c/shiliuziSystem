@@ -21,7 +21,12 @@ public interface RPRecordService extends IService<RPRecords> {
     //导出excel
     void exportRPRecord(HttpServletResponse response, String studentId);
 
-    Result addRPRecordAnnex(MultipartFile file,Integer reRecordsId);
+    //添加奖惩记录附件
+    Result addRPRecordAnnex(MultipartFile file,Integer rpRecordsId);
+
+    //下载奖惩记录附件
+    Result downloadAnnex(Integer rpRecordsId,HttpServletResponse response);
+
     Result revoke(RPRecords.RevokeRecord revokeRecord);
 
     void importRPRecord(MultipartFile file);
