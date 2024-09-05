@@ -115,6 +115,13 @@ public class RPRecordController {
         return rpRecordService.addRPRecordAnnex(file,reRecordsId);
     }
 
+    //下载奖惩记录附件
+    @GetMapping("/downloadAnnex")
+    public Result downloadAnnex(@RequestParam("RPRecordId") Integer RPRecordId,HttpServletResponse response) {
+        return rpRecordService.downloadAnnex(RPRecordId,response);
+    }
+
+
 
     //导出奖惩记录
     @PostMapping(value = "/exportRPRecord", produces = MediaType.APPLICATION_JSON_VALUE)

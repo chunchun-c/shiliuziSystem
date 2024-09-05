@@ -55,10 +55,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         UserRole userRole = userRoleMapper.selectOne(userRoleWrapper);
         //查询角色信息
         QueryWrapper<Role> roleWrapper = new QueryWrapper<>();
-        roleWrapper.select("name").eq("id", userRole.getRoleId());
+        roleWrapper.eq("id", userRole.getRoleId());
         Role role = roleMapper.selectOne(roleWrapper);
         if (role!=null){
-            return Result.success(role.getName());
+            return Result.success(role);
         }else {
             return Result.fail(AppExceptionCodeMsg.NO_FIT_DATA);
         }

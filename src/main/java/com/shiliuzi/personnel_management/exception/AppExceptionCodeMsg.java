@@ -17,7 +17,7 @@ public enum AppExceptionCodeMsg {
     REVOKE_INFO_NOT_FOUND(400, "撤销奖惩记录时未找到该记录"),
     APPLY_REVOKE_ERROR(400, "同意申请撤销失败"),
 
-    FILE_ERROR(402, "文件错误"),
+    FILE_ERROR(402, "文件读取错误"),
 
 
     NO_FIT_DATA(404, "未找到符合条件的数据,请检查条件"),

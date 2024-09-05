@@ -2,6 +2,7 @@ package com.shiliuzi.personnel_management.controller;
 
 import com.shiliuzi.personnel_management.exception.AppExceptionCodeMsg;
 import com.shiliuzi.personnel_management.pojo.Permission;
+import com.shiliuzi.personnel_management.pojo.Role;
 import com.shiliuzi.personnel_management.pojo.User;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RoleService;
@@ -69,8 +70,8 @@ public class LoginController {
             session.setAttribute("loginUser",user);
 
             //获取用户的角色id
-            String roleName = (String) roleService.getRoleByUserId(user.getId()).getData();
-            String[] resultArray = { jwt, roleName};
+            Role role = (Role) roleService.getRoleByUserId(user.getId()).getData();
+            String[] resultArray = { jwt, role.getName()};
             return Result.success("登录成功",resultArray);
         }else {
             return Result.fail(AppExceptionCodeMsg.USERID_PWD_WRONG);
