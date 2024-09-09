@@ -138,7 +138,7 @@ public class RPRecordController {
 
 
     //管理员撤销奖惩记录
-    @TestPermission
+    //@TestPermission
     @PostMapping ("/revokeRPRecord")
     public Result revokeRPRecord(@Validated @RequestBody RPRecords.RevokeRecord revokeRecord ) {
 

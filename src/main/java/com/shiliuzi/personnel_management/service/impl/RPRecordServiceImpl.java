@@ -20,7 +20,7 @@ import com.shiliuzi.personnel_management.pojo.Role;
 import com.shiliuzi.personnel_management.result.Result;
 import com.shiliuzi.personnel_management.service.RPRecordService;
 import com.shiliuzi.personnel_management.service.RoleService;
-import com.shiliuzi.personnel_management.utils.ExcelUtil;
+
 import com.shiliuzi.personnel_management.utils.ThreadLocalUtil;
 import com.shiliuzi.personnel_management.vo.RPRecordsInfoVo;
 import jakarta.servlet.ServletOutputStream;
@@ -256,7 +256,7 @@ public class RPRecordServiceImpl extends ServiceImpl<RPRecordMapper, RPRecords> 
         }
         //保存附件
         String fileName = file.getOriginalFilename();
-        fileName = "奖惩记录"+rpRecordsId+"附件,"+fileName;
+        fileName = "奖惩记录"+reRecordsId+"附件,"+fileName;
         try {
             File destinationFile = new File(uploadDir+"\\"+fileName);
             file.transferTo(destinationFile);

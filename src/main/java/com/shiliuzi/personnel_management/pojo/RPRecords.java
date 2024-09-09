@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -78,7 +81,9 @@ public class RPRecords {
 
     //增加奖惩记录json
     @Data
-    public static class addRPRecords extends AURPRecords {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class addRPRecords extends AURPRecords{
         @Null
         private Integer id;
 
